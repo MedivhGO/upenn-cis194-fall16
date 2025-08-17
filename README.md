@@ -1,1 +1,11 @@
-https://www.cis.upenn.edu/~cis1940/fall16/index.html
+# upenn-cis194-fall16
+
+## course link
+
+<https://www.cis.upenn.edu/~cis1940/fall16/index.html>
+
+## homework link
+
+- [x] [Functions and Pictures](https://www.cis.upenn.edu/~cis1940/fall16/hw/01-intro.html)
+
+- [ ] [Higher Order functions and Datatypes](https://www.cis.upenn.edu/~cis1940/fall16/hw/02-ho-datatypes.html)

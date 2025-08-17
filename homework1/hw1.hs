@@ -2,7 +2,7 @@
 import CodeWorld
 
 main :: IO ()
-main = exercise1
+main = exercise2
 
 -- Fill in the blanks! (When I say blanks, I mean undefineds)
 
@@ -11,39 +11,58 @@ main = exercise1
 data LightState = Go | Stop | Slow | Ready
 
 botCircle, midCircle, topCircle :: Color -> Picture
-botCircle c = colored c (translated 0 (-1.5) (solidCircle 1))
+botCircle c = colored c (translated 0 (-3) (solidCircle 1))
 midCircle c = colored c (translated 0  0 (solidCircle 1))
-topCircle c = colored c (translated 0   1.5  (solidCircle 1))
+topCircle c = colored c (translated 0   3  (solidCircle 1))
 
 frame :: Picture
-frame = rectangle 2.5 5.5
+frame = rectangle 2.5 9
 
 trafficLight :: LightState -> Picture
 trafficLight Go  = botCircle green & midCircle black & topCircle black & frame
-trafficLight Stop = botCircle black & midCircle yellow & topCircle red   & frame
-trafficLight Slow = botCircle black & midCircle yellow & topCircle red   & frame
+trafficLight Stop = botCircle black & midCircle black & topCircle red   & frame
+trafficLight Slow = botCircle black & midCircle yellow & topCircle black   & frame
 trafficLight Ready = botCircle black & midCircle yellow & topCircle red   & frame
 
-trafficController :: Double -> Picture
+nextState :: LightState -> LightState
+
+nextState Go = Slow
+nextState Slow = Stop
+nextState Stop = Ready
+nextState Ready = Go
+
+trafficController :: Int -> Picture
 trafficController t
-  | round (t/3) `mod` 2 == 0 = trafficLight True
-  | otherwise                = trafficLight False
+  | t >= 0 && t < 3  = trafficLight Go
+  | t == 3           = trafficLight Slow
+  | t >= 4 && t < 7  = trafficLight Stop
+  | otherwise        = trafficLight Ready
+
 
 trafficLightAnimation :: Double -> Picture
-trafficLightAnimation = trafficController
+trafficLightAnimation t = trafficController (round t `mod` 8)
 
 exercise1 :: IO ()
 exercise1 = animationOf trafficLightAnimation
 
 -- Exercise 2
 
-tree :: Integer -> Picture
-tree 0 = blank
-tree n = polyline [(0,0),(0,1)] & translated 0 1 (
-  rotated (pi/10) (tree (n-1)) & rotated (- pi/10) (tree (n-1)))
+tree :: Picture -> Integer -> Picture
+tree _ 0 = blank
+tree b n = polyline [(0,0),(0,1)] & translated 0 1 b & translated 0 1 (
+  rotated (pi/10) (tree b (n-1)) & rotated (- pi/10) (tree b (n-1)))
   
+blossom :: Double -> Picture
+blossom t
+    | t <= 10 = colored yellow (solidCircle (t / 50 ))
+    | otherwise =colored yellow (solidCircle 0.2)
+
+
+bloomingTree :: Double -> Picture
+bloomingTree t = tree (blossom t) 8
+
 exercise2 :: IO ()
-exercise2 = undefined
+exercise2 = animationOf bloomingTree
 
 -- Exercise 3
 
