@@ -8,16 +8,21 @@ main = exercise1
 
 -- Exercise 1
 
-botCircle, topCircle :: Color -> Picture
+data LightState = Go | Stop | Slow | Ready
+
+botCircle, midCircle, topCircle :: Color -> Picture
 botCircle c = colored c (translated 0 (-1.5) (solidCircle 1))
+midCircle c = colored c (translated 0  0 (solidCircle 1))
 topCircle c = colored c (translated 0   1.5  (solidCircle 1))
 
 frame :: Picture
 frame = rectangle 2.5 5.5
 
-trafficLight :: Bool -> Picture
-trafficLight True  = botCircle green & topCircle black & frame
-trafficLight False = botCircle black & topCircle red   & frame
+trafficLight :: LightState -> Picture
+trafficLight Go  = botCircle green & midCircle black & topCircle black & frame
+trafficLight Stop = botCircle black & midCircle yellow & topCircle red   & frame
+trafficLight Slow = botCircle black & midCircle yellow & topCircle red   & frame
+trafficLight Ready = botCircle black & midCircle yellow & topCircle red   & frame
 
 trafficController :: Double -> Picture
 trafficController t
