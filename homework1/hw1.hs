@@ -67,20 +67,35 @@ exercise2 = animationOf bloomingTree
 -- Exercise 3
 
 wall, ground, storage, box :: Picture
-wall =    undefined
-ground =  undefined
-storage = undefined
-box =     undefined
+wall       = colored gray (solidRectangle 1 1)
+ground     = colored black (solidRectangle 1 1)
+storageDot = colored orange (solidCircle 0.2)
+storage    = storageDot & colored black (solidRectangle 1 1)
+box        = colored brown (solidRectangle 1 1)
 
 drawTile :: Integer -> Picture
-drawTile = undefined
+drawTile 1 = wall
+drawTile 2 = ground
+drawTile 3 = storage
+drawTile 4 = box
+drawTile _ = blank
 
-         
+drawRows :: Integer -> Picture
+drawRows 11 = blank
+drawRows y  = drawColumns y (-10) & drawRows (y + 1)
+
+drawColumns :: Integer -> Integer -> Picture
+drawColumns _ 11 = blank
+drawColumns y x  = drawTileAt x y & drawColumns y (x + 1)
+
+drawTileAt :: Integer -> Integer -> Picture
+drawTileAt x y = translated (fromIntegral x) (fromIntegral y) (drawTile (maze x y))
+
 pictureOfMaze :: Picture
-pictureOfMaze = undefined
+pictureOfMaze = drawRows (-10)
 
 exercise3 :: IO ()
-exercise3 = undefined
+exercise3 = drawingOf pictureOfMaze
          
 maze :: Integer -> Integer -> Integer 
 maze x y
